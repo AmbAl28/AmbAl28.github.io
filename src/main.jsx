@@ -10,7 +10,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <div className="aim">
           {/* Прицел */}
         </div>
-        <Canvas camera={{ fov: 45 }}>
+        {/* Камера */}
+        <Canvas camera={{ fov: 45, position: [0, 5, 0] }}>
           {/* Основная сфена */}
             <App />
         </Canvas>

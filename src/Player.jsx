@@ -1,5 +1,6 @@
 import * as THREE from "three";
-import {RigidBody} from "@react-three/rapier";
+import * as RAPIER from "@dimforge/rapier3d-compat"
+import {RigidBody, useRapier} from "@react-three/rapier";
 import {useRef} from "react";
 import {usePersonControls} from "./hooks.js";
 import {useFrame} from "@react-three/fiber";
@@ -15,6 +16,8 @@ export const Player = () => {
     const playerRef = useRef();
     // При использовании хука возвращается объект с булевыми значениями, указывающими, какие кнопки управления в данный момент нажаты игроком.
     const { forward, backward, left, right, jump } = usePersonControls();
+       
+    const rapier = useRapier();
 
     // Хук вызывается на каждом кадре анимации. Внутри этого хука происходит обновление позиции и линейной скорости игрока.
     useFrame((state) => {
@@ -22,6 +25,7 @@ export const Player = () => {
         if (!playerRef.current) return;
 
         // Получение текущей линейной скорости игрока.
+        // moving player
         const velocity = playerRef.current.linvel();
 
         // Установка вектора движения вперёд/назад на основе нажатых кнопок.
@@ -35,11 +39,29 @@ export const Player = () => {
         playerRef.current.wakeUp();
         // Установка новой линейной скорости игрока на основе вычисленного направления движения и сохранение текущей вертикальной скорости (чтобы не влиять на прыжки или падения).
         playerRef.current.setLinvel({ x: direction.x, y: velocity.y, z: direction.z });
+
+        // Получение доступа к сцене физического движка Rapier. Он содержит все физические объекты и управляет их взаимодействием.
+        // jumping
+        const world = rapier.world;
+        // В этом месте происходит “лучевое прослеживание” (raycasting). Создаётся луч, который начинается в текущей позиции игрока и направлен вниз по оси Y. Этот луч “бросается” в сцену, чтобы определить, пересекается ли он с каким-либо объектом на сцене.
+        const ray = world.castRay(new RAPIER.Ray(playerRef.current.translation(), { x: 0, y: -1, z: 0 }));
+        
+        // Проверяется условие, находится ли игрок на земле:
+        // ray - был ли луч создан;
+        // ray.collider - столкнулся ли луч с каким-либо объектом на сцене;
+        // Math.abs(ray.toi) - “время воздействия” луча. Если это значение меньше или равно заданному, это может указывать на то, что игрок находится достаточно близко к поверхности, чтобы считаться “на земле”.       
+        const grounded = ray && ray.collider && Math.abs(ray.toi) <= 0.75;
+        
+        if (jump && grounded) doJump();
     });
+
+    const doJump = () => {
+        playerRef.current.setLinvel({x: 0, y: 8, z: 0});
+    }
 
     return (
         <>
-            <RigidBody position={[0, 1, -2]} ref={playerRef}>
+            <RigidBody position={[0, 1, -2]} mass={1} ref={playerRef} lockRotations>
                 <mesh>
                   {/* Это персонаж с обёрткой как физический объект */}
                     <capsuleGeometry args={[0.5, 0.5]}/>
