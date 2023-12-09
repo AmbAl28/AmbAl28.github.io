@@ -16,11 +16,21 @@ export const App = () => {
    <Physics gravity={[0, -20, 0]}>
                 {/* Поверхность (земля) */}
                 <Ground />
-                {/* Плеер */}
+                {/* Игрок */}
                 <Player />
                 {/* Для того чтобы куб вёл себя как реальный физический объект, необходимо обернуть его в компонент RigidBody */}
                 <RigidBody>
                     <mesh position={[0, 3, -5]}>
+                        <boxGeometry />
+                    </mesh>
+                </RigidBody>
+                <RigidBody>
+                    <mesh position={[3, 3, -7]}>
+                        <boxGeometry />
+                    </mesh>
+                </RigidBody>
+                <RigidBody>
+                    <mesh position={[8, 3, -9]}>
                         <boxGeometry />
                     </mesh>
                 </RigidBody>
