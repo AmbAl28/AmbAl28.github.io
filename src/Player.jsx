@@ -33,7 +33,8 @@ export const Player = () => {
         // Установка вектора движения влево/вправо.
         sideVector.set(left - right, 0, 0);
         // Вычисление итогового вектора движения игрока путём вычитания векторов движения, нормализации результата (чтобы длина вектора была равна 1) и умножения на константу скорости движения.
-        direction.subVectors(frontVector, sideVector).normalize().multiplyScalar(MOVE_SPEED);
+        // Метод applyEuler применяет вращение к вектору на основе заданных углов Эйлера. В данном случае вращение камеры применяется к вектору direction. Это используется для соответствия движения относительно ориентации камеры, чтобы игрок двигался в том направлении, куда повёрнута камера.
+        direction.subVectors(frontVector, sideVector).normalize().multiplyScalar(MOVE_SPEED).applyEuler(state.camera.rotation);
 
         // "Пробуждение" объекта игрока, чтобы убедиться, что он реагирует на изменения. Если не использовать данный метод, то через некоторое время объект “заснёт” и не будет реагировать на изменение позиции.
         playerRef.current.wakeUp();
@@ -53,6 +54,11 @@ export const Player = () => {
         const grounded = ray && ray.collider && Math.abs(ray.toi) <= 1;
         
         if (jump && grounded) doJump();
+
+        // Камера передвигается по указанным координатам
+        // moving camera
+        const {x, y, z} = playerRef.current.translation();
+        state.camera.position.set(x, y+5,z);
     });
 
     const doJump = () => {
