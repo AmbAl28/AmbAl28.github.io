@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import * as RAPIER from "@dimforge/rapier3d-compat"
-import {RigidBody, useRapier} from "@react-three/rapier";
+import {CapsuleCollider, RigidBody, useRapier} from "@react-three/rapier";
 import {useRef} from "react";
 import {usePersonControls} from "./hooks.js";
 import {useFrame} from "@react-three/fiber";
@@ -50,7 +50,7 @@ export const Player = () => {
         // ray - был ли луч создан;
         // ray.collider - столкнулся ли луч с каким-либо объектом на сцене;
         // Math.abs(ray.toi) - “время воздействия” луча. Если это значение меньше или равно заданному, это может указывать на то, что игрок находится достаточно близко к поверхности, чтобы считаться “на земле”.       
-        const grounded = ray && ray.collider && Math.abs(ray.toi) <= 0.75;
+        const grounded = ray && ray.collider && Math.abs(ray.toi) <= 1;
         
         if (jump && grounded) doJump();
     });
@@ -61,10 +61,11 @@ export const Player = () => {
 
     return (
         <>
-            <RigidBody position={[0, 1, -2]} mass={1} ref={playerRef} lockRotations>
+            <RigidBody colliders={false} mass={1} ref={playerRef} lockRotations>
                 <mesh>
                   {/* Это персонаж с обёрткой как физический объект */}
                     <capsuleGeometry args={[0.5, 0.5]}/>
+                    <CapsuleCollider args={[0.5, 0.5]} />
                 </mesh>
             </RigidBody>
         </>
