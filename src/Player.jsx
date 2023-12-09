@@ -51,14 +51,16 @@ export const Player = () => {
         // ray - был ли луч создан;
         // ray.collider - столкнулся ли луч с каким-либо объектом на сцене;
         // Math.abs(ray.toi) - “время воздействия” луча. Если это значение меньше или равно заданному, это может указывать на то, что игрок находится достаточно близко к поверхности, чтобы считаться “на земле”.       
-        const grounded = ray && ray.collider && Math.abs(ray.toi) <= 1;
+        const grounded = ray && ray.collider && Math.abs(ray.toi) <= 1.5;
         
         if (jump && grounded) doJump();
 
         // Камера передвигается по указанным координатам
         // moving camera
         const {x, y, z} = playerRef.current.translation();
-        state.camera.position.set(x, y+5,z);
+        state.camera.position.set(x, y+3,z);
+        // Камера фиксируется на эту точку
+        // state.camera.lookAt(x, y, z); 
     });
 
     const doJump = () => {
@@ -71,7 +73,7 @@ export const Player = () => {
                 <mesh>
                   {/* Это персонаж с обёрткой как физический объект */}
                     <capsuleGeometry args={[0.5, 0.5]}/>
-                    <CapsuleCollider args={[0.5, 0.5]} />
+                    <CapsuleCollider args={[0.75, 0.5]} />
                 </mesh>
             </RigidBody>
         </>

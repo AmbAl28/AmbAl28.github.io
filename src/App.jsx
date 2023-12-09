@@ -1,7 +1,8 @@
 import {PointerLockControls, Sky} from "@react-three/drei";
 import {Ground} from "./Ground.jsx";
-import {Physics, RigidBody} from "@react-three/rapier";
+import {Physics} from "@react-three/rapier";
 import {Player} from "./Player.jsx";
+import {Cubes} from "./Cube.jsx";
 
 export const App = () => {
   return (
@@ -18,22 +19,9 @@ export const App = () => {
                 <Ground />
                 {/* Игрок */}
                 <Player />
-                {/* Для того чтобы куб вёл себя как реальный физический объект, необходимо обернуть его в компонент RigidBody */}
-                <RigidBody>
-                    <mesh position={[0, 3, -5]}>
-                        <boxGeometry />
-                    </mesh>
-                </RigidBody>
-                <RigidBody>
-                    <mesh position={[3, 3, -7]}>
-                        <boxGeometry />
-                    </mesh>
-                </RigidBody>
-                <RigidBody>
-                    <mesh position={[8, 3, -9]}>
-                        <boxGeometry />
-                    </mesh>
-                </RigidBody>
+                {/* Кубы */}
+                <Cubes />
+                {/* Другие объекты */}
             </Physics>
     </>
 )

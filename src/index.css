@@ -20,3 +20,27 @@ html, body, #root, #container {
   border: 2px solid white;
   z-index: 2;
 }
+/* Показатели в левом углу */
+.panel {
+  position: absolute;
+  top: 3%;
+  left: 4%;
+  width: 200px;
+  height: 20px;
+  border-radius: 10%;
+  border: 2px solid white;
+  z-index: 2;
+  color: white;
+}
+/* Показатели в правом углу */
+.panel_2 {
+  position: absolute;
+  top: 3%;
+  right: 4%;
+  width: 200px;
+  height: 20px;
+  border-radius: 10%;
+  border: 2px solid white;
+  z-index: 2;
+  color: white;
+}
