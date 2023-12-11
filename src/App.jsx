@@ -3,6 +3,8 @@ import {Ground} from "./Ground.jsx";
 import {Physics} from "@react-three/rapier";
 import {Player} from "./Player.jsx";
 import {Cubes} from "./Cube.jsx";
+import {WeaponModel} from "./WeaponModel.jsx";
+import {HomeModel} from "./HomeModel.jsx";
 
 export const App = () => {
   return (
@@ -23,6 +25,13 @@ export const App = () => {
                 <Cubes />
                 {/* Другие объекты */}
             </Physics>
+
+            <group position={[0, 3, 0]}>
+                <WeaponModel/>
+            </group>
+            <group position={[0, 3, 0]} scale={5}>
+                <HomeModel/>
+            </group>
     </>
 )
 }
